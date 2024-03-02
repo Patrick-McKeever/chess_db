@@ -1,0 +1,16 @@
+This is an app meant to display statistical information on chess games. After collating over 400,000 games from over 250 grandmaster players (plus their opponents throughout their careers) from the Romantic era until the present, one can examine the data to see the most common moves in a given position, search for games from a given position, and see how the outcome of a game containing a position varies according to the ELO of the players. All data was sourced from https://www.pgnmentor.com/ and converted into a database using a custom python script.
+
+An online version is hosted at: https://chess-db.patrick-mckeever.xyz/
+
+Because the database constructed for the application contains large amounts of data (> 40,000,000 rows), I have not included it in this repo. Instead, I have included an init.sqlfile which constructs the schema of the database. 
+
+
+To run with actual data, first download http://chess-db.patrick-mckeever.xyz/chess.sql and replace "init.sql" with the downloaded "chess.sql". Note that this will likely take several hours to run, as this requires the insertion of several tens of millions of rows.
+
+To run the webapp, clone the repo and run in the main directory:
+
+	docker compose up -d --build
+
+To stop the repo from running:
+
+	docker compose down
