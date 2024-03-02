@@ -14,3 +14,10 @@ To run the webapp, clone the repo and run in the main directory:
 To stop the repo from running:
 
 	docker compose down
+
+The "misc" directory contains two files which are not needed to run the app but which may be of interest to the grader.
+
+"misc/extract_pgn.py" was used to extract data from PGN files. I can't upload the full PGN data to github, so it will not run on its own.
+
+"mics/test.py" runs test cases for API endpoints. Usage is "python3 test.py" (which tests on patrick-mckeever.xyz endpoints) or "python3 test.py [API_ROOT_URL]" for a custom endpoint. It tests API endpoints against data extracted from python analysis of PGNs, which is collated in test_data.json.
+

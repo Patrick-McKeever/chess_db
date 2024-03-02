@@ -77,15 +77,6 @@ if (isset($_GET["result"])) {
 
 $games_q_str .= "ORDER BY (rw.elo + rb.elo) DESC ";
 
-$limit = 50;
-if (isset($_GET["limit"]) && ((int) $_GET["limit"]) < 50) {
-    $limit = $_GET["limit"];
-}
-
-$games_q_str .= "LIMIT ? ";
-$bind_types .= "d";
-$bind_params[] = $limit;
-
 $resp = array();
 $games_query = $conn->prepare($games_q_str . ";");
 if ($games_query->bind_param($bind_types, ...$bind_params)) {
