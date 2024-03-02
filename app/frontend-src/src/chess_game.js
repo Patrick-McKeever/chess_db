@@ -2,15 +2,22 @@ import React, { Component } from 'react';
 import { Chessboard } from 'react-chessboard';
 import Chess from 'chess.js';
 
+// This component displays a particular chess game
+// identified by an ID prop corresponding to a primary key
+// in the GAMES table of the database.
 class ChessGame extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: null,
 			game_id: props.game_id,
+			// move_ind is current *turn* no, starting at 0.
+			// -1 is position before first move.
+			// e.g. after 1. e4 e5 2. nf3 nc6 3. bb5 move_ind is 4.
 			move_ind: -1,
 			loading: true,
 			error: null,
+			// This is just starting position.
 			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 		};
 	}
@@ -20,6 +27,12 @@ class ChessGame extends Component {
 		this.GetGame();
 	}
 
+	// Fetch game data from API.
+	// Data is JSON with two fields: "data", which is
+	// JSON dict of game metadata attributes,
+	// and "moves", which is JSON list of move dictionaries
+	// with fields "fen_before" and "san_str",
+	// ordered by the order they were played in game.
 	GetGame() {
 		if(this.state.game_id === null) return;
 
@@ -46,22 +59,32 @@ class ChessGame extends Component {
 			});
 	}
 
+	// If we get passed new game ID prop by parent,
+	// update internal state.
 	componentDidUpdate() {
 		if(this.state.game_id != this.props.game_id) {
 			this.setState({ game_id: this.props.game_id }, this.GetGame);
 		}
 	}
 
+	// Increment current move index, but only if it doesn't
+	// cause us to go past end of game.
 	NextMove = () => {
 		let no_moves = this.state.data.moves.length - 1;
 		let move_ind = Math.min(this.state.move_ind + 1, no_moves);
 		this.GoToMove(move_ind);
 	}
 
+	// Decrement current move index, but only if it doesn't
+	// bring us before start of game.
 	PrevMove = () => {
+		// -1 because -1 is just position before first move,
+		// and it's valid to revert here.
 		this.GoToMove(Math.max(-1, this.state.move_ind - 1));
 	}
 
+	// Given index of a move, make board display that particular
+	// index.
 	GoToMove = (ind) => {
 		let fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 

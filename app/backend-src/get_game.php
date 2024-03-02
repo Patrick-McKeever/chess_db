@@ -1,4 +1,9 @@
 <?php
+// Given game ID, return JSON including metadata
+// (player ELOs, names, event, etc) in "data" key
+// and list of "san_strs" and FENs ("fen_before")
+// in order that they were played under "moves" key.
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -52,6 +57,4 @@ if ($moves_query->bind_param('d', $_GET['game_id'])) {
 }
 
 echo(json_encode($resp));
-
-
 ?>

@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import { Chessboard } from 'react-chessboard';
 import Chess from 'chess.js';
 
+// This component shows the top moves (limited to 10)
+// that are played in a given position (taken from the application's
+// main board) as well as the number of times those moves occurred,
+// and the percentage white wins, black wins, and draws that took
+// place when each move was played.
 class MovesTable extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			// FEN on main board.
 			fen: props.fen,
 			top_moves: [],
 			loading: true
@@ -17,6 +23,7 @@ class MovesTable extends Component {
 		this.GetTopMoves();
 	}
 
+	// If parent passes us new FEN, update data from API.
 	componentDidUpdate() {
 		if(this.state.fen != this.props.fen) {
 			this.setState({ fen: this.props.fen, loading: true }, this.GetTopMoves);
@@ -24,6 +31,11 @@ class MovesTable extends Component {
 	}
 
 
+	// API returns JSON list. Each entry has fields
+	// "san_str" (e.g. e4); "wwins" for no. white wins;
+	// "bwins" for no. black wins; "draws" for no. draws;
+	// and "occs" for number of total times that move
+	// was played in the given position.
 	GetTopMoves() {
 		// Fetch data from the API
 		fetch('/get_moves.php?fen_str=' + this.state.fen,

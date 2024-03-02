@@ -3,12 +3,25 @@ import { Chessboard } from 'react-chessboard';
 import Chess from 'chess.js';
 import GameSearch from './game_search';
 
+// This component consists of a GamesSearch form,
+// allowing users to search for games based on attributes,
+// and a list of games returned by the search function.
+// It is passed a particular FEN which the user has put
+// on the application's main board; it will then use
+// this to search for games containing that position,
+// along with whatever other constraints the user adds.
 class GamesList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			// FEN on main board in parent component.
 			fen: props.fen,
+			// Callback to parent which allows us to edit the
+			// "current game" displayed by parent. Allows this
+			// component to display a game that the user clicks
+			// in the parent div.
 			set_parent_game: props.set_game,
+			// Stores all the games API has given us.
 			games: [],
 			loading: true
 		}
@@ -19,12 +32,17 @@ class GamesList extends Component {
 		this.GetGames();
 	}
 
+	// If parent passed us new FEN, reload data from API.
 	componentDidUpdate() {
 		if(this.state.fen != this.props.fen) {
 			this.setState({ fen: this.props.fen, loading: true }, this.GetGames);
 		}
 	}
 
+	// Get games according to params set by user in GamesSearch
+	// form. If null is passed for any value (or "Any" for results),
+	// then that attribute is assumed to be irrelevant for query
+	// results (because it is empty in form).
 	GetGames(
 			white_elo_min = null,
 			white_elo_max = null,

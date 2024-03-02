@@ -1,4 +1,9 @@
 <?php
+// Get top 10 moves ("san_str") that were played in a given position,
+// as well as the number of times that they were played ("occs"),
+// number white wins ("wwin"), number black wins ("bwin"),
+// and number draws ("draws").
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);

@@ -1,4 +1,8 @@
 <?php
+// For each range of 200 ELO of players (e.g. 2000-2199, 2200-2399, etc.),
+// represented as "elor" key, return no occurrences ("occs"), white wins ("wwin"),
+// black wins ("bwin"), and draws ("draw") from a given positon ("fen_str", 
+// query param).
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -59,6 +63,14 @@ $START_POSITION_RESULTS = '[
 if($_GET["fen_str"] == $START_FEN_STR) {
     echo($START_POSITION_RESULTS);
 } else {
+	// FLOOR(w.elo / 200) * 200 divides white ELO into
+	// ranges of 200; i.e. all ELOs between 2000 and 2199
+	// are grouped into this.
+	// Note that we only care about games where *both*
+	// players are in this range. This is why we can
+	// use w.elo in this formula, since we also check that
+	// black ELO is between FLOOR(w.elo / 200) * 200 and
+	// FLOOR(w.elo / 200) * 200 + 200.
     $outcomes_query = $conn->prepare(
                     "SELECT (FLOOR(w.elo / 200) * 200) AS elor,
                         COUNT(*) AS occs,

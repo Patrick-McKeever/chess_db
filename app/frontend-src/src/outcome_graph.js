@@ -3,10 +3,18 @@ import { Chessboard } from 'react-chessboard';
 import Chess from 'chess.js';
 import { VictoryStack, VictoryLegend, VictoryBar, VictoryAxis, VictoryChart } from 'victory';
 
+// This table exists to give a graphical representation of
+// game outcomes for a particular position as they vary across
+// ELO ranges. Given a position on the application's main board,
+// this component will ask the API what percentage of games from
+// that position concluded with a white win, a black win, or a draw
+// at ELO ranges of 200 (i.e. 2000-2199, 2200-2399, etc.). It will
+// then display this data using a stacked bar chart.
 class OutcomeGraph extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			// FEN on app borad.
 			fen: props.fen,
 			loading: true,
 			outcomes: []
@@ -18,12 +26,20 @@ class OutcomeGraph extends Component {
 		this.GetOutcomes();
 	}
 
+	// If parent gives us new FEN, reload data from API.
 	componentDidUpdate() {
 		if(this.state.fen != this.props.fen) {
 			this.setState({ fen: this.props.fen, loading: true }, this.GetOutcomes);
 		}
 	}
 
+	// Data returned from API is JSON list with entry
+	// for each 200-range of ELO values. Each list entry
+	// has fields "elor" for min bound of range; "wwins",
+	// "bwins", and "draws" for no. white wins, black wins,
+	// draws in games in that ELO range; and "occs" for
+	// total no. of time this position has occurred at that
+	// ELO range.
 	GetOutcomes() {
 		// Fetch data from the API
 		fetch('/get_outcomes_by_elo.php?fen_str=' + this.state.fen,
@@ -59,6 +75,7 @@ class OutcomeGraph extends Component {
 			return <p>No games from this position</p>;
 		}
 
+		// We use victory for a stacked bar chart.
 		return (<div>
 					<VictoryChart domainPadding={10} padding={{ top: 5, bottom: 50, left: 50, right: 50 }} width={300} height={250}>
 						<VictoryAxis 

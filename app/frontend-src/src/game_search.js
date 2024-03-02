@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Chessboard } from 'react-chessboard';
 import Chess from 'chess.js';
 
+// This component allows users to search for games
+// based on player names, player ELOs, and positions.
+// It is essentially a form which sets internal state when
+// users modify form values. Not much to explain.
 class GameSearch extends Component {
 	constructor(props) {
 		super(props);
