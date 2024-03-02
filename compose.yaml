@@ -10,8 +10,6 @@ services:
       MYSQL_DATABASE: "chess"
       MYSQL_USER: "chess_user"
       MYSQL_PASSWORD: "mysql_password"
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
     build:
